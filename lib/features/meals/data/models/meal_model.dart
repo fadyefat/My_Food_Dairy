@@ -1,4 +1,4 @@
-class Meal {
+class MealModel {
   final int? id;
   final String mealType;
   final String mealDetails;
@@ -7,7 +7,7 @@ class Meal {
   final String? photoPath;
   final String createdAt;
 
-  Meal({
+  MealModel({
     this.id,
     required this.mealType,
     required this.mealDetails,
@@ -29,8 +29,8 @@ class Meal {
     };
   }
 
-  factory Meal.fromMap(Map<String, dynamic> map) {
-    return Meal(
+  factory MealModel.fromMap(Map<String, dynamic> map) {
+    return MealModel(
       id: map['id'],
       mealType: map['meal_type'],
       mealDetails: map['meal_details'],
@@ -41,7 +41,7 @@ class Meal {
     );
   }
 
-  Meal copyWith({
+  MealModel copyWith({
     int? id,
     String? mealType,
     String? mealDetails,
@@ -50,7 +50,7 @@ class Meal {
     String? photoPath,
     String? createdAt,
   }) {
-    return Meal(
+    return MealModel(
       id: id ?? this.id,
       mealType: mealType ?? this.mealType,
       mealDetails: mealDetails ?? this.mealDetails,

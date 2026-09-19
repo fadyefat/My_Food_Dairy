@@ -1,65 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:my_food_diary/Screens/DailyLogScreen.dart';
-import 'package:my_food_diary/Screens/DailySummaryScreen.dart';
-import 'package:my_food_diary/Screens/MealScreen.dart';
-import 'package:my_food_diary/Screens/WeeklySummaryScreen.dart';
+import '../../../../core/routing/routes.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_styles.dart';
 
-class Homescreen extends StatefulWidget {
-  const Homescreen({super.key});
-
-  @override
-  State<Homescreen> createState() => _HomescreenState();
-}
-
-class _HomescreenState extends State<Homescreen> {
-  DateTime now = DateTime.now();
-  String formattedDate = DateFormat('EEEE, MMMM d, y').format(DateTime.now());
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final String formattedDate = DateFormat('EEEE, MMMM d, y').format(DateTime.now());
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(196, 228, 210, 1.0),
+        backgroundColor: AppColors.lightGreenBackground,
         elevation: 0,
       ),
-      backgroundColor: Color.fromRGBO(196, 228, 210, 1.0),
+      backgroundColor: AppColors.lightGreenBackground,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               // App Title
               Text(
                 "My Food Diary",
-                style: TextStyle(
-                  color: Colors.green[900],
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: AppStyles.font28BoldDarkGreen,
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               // Date
               Text(
                 formattedDate,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                ),
+                style: AppStyles.font14Grey,
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
 
               // Quick Actions Container
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.white,
                   borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: AppColors.cardShadow,
                       blurRadius: 10,
                       offset: Offset(0, 2),
                     ),
@@ -69,15 +55,11 @@ class _HomescreenState extends State<Homescreen> {
                   padding: const EdgeInsets.all(24.0),
                   child: Column(
                     children: [
-                      Text(
+                      const Text(
                         "Quick Actions",
-                        style: TextStyle(
-                          color: Colors.green[700],
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: AppStyles.font16SemiBoldGreen,
                       ),
-                      SizedBox(height: 24),
+                      const SizedBox(height: 24),
 
                       // Add New Meal Button
                       SizedBox(
@@ -85,41 +67,30 @@ class _HomescreenState extends State<Homescreen> {
                         height: 50,
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => MealScreen()),
-                            );
+                            Navigator.pushNamed(context, Routes.mealScreen);
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.deepOrange,
+                            backgroundColor: AppColors.primaryOrange,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
                             elevation: 0,
                           ),
-                          child: Row(
+                          child: const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
-                                Icons.add,
-                                color: Colors.white,
-                                size: 20,
-                              ),
+                              Icon(Icons.add, color: Colors.white, size: 20),
                               SizedBox(width: 8),
                               Text(
                                 "Add New Meal",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                style: AppStyles.font14SemiBoldWhite,
                               ),
                             ],
                           ),
                         ),
                       ),
 
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
 
                       // Today's Summary Button
                       SizedBox(
@@ -127,10 +98,7 @@ class _HomescreenState extends State<Homescreen> {
                         height: 50,
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => DailySummaryScreen()),
-                            );
+                            Navigator.pushNamed(context, Routes.dailySummaryScreen);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
@@ -148,17 +116,13 @@ class _HomescreenState extends State<Homescreen> {
                             children: [
                               Icon(
                                 Icons.calendar_today,
-                                color: Colors.green[700],
+                                color: AppColors.primaryGreen,
                                 size: 18,
                               ),
-                              SizedBox(width: 8),
-                              Text(
+                              const SizedBox(width: 8),
+                              const Text(
                                 "Today's Summary",
-                                style: TextStyle(
-                                  color: Colors.green[700],
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                style: AppStyles.font14SemiBoldGreen,
                               ),
                             ],
                           ),
@@ -169,17 +133,17 @@ class _HomescreenState extends State<Homescreen> {
                 ),
               ),
 
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // View Logs Container
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.white,
                   borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: AppColors.cardShadow,
                       blurRadius: 10,
                       offset: Offset(0, 2),
                     ),
@@ -189,15 +153,11 @@ class _HomescreenState extends State<Homescreen> {
                   padding: const EdgeInsets.all(24.0),
                   child: Column(
                     children: [
-                      Text(
+                      const Text(
                         "View Logs",
-                        style: TextStyle(
-                          color: Colors.green[700],
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: AppStyles.font16SemiBoldGreen,
                       ),
-                      SizedBox(height: 24),
+                      const SizedBox(height: 24),
 
                       // Daily Log Button
                       SizedBox(
@@ -205,12 +165,7 @@ class _HomescreenState extends State<Homescreen> {
                         height: 50,
                         child: ElevatedButton(
                           onPressed: () {
-
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => DailyLogScreen()),
-                            );
-
+                            Navigator.pushNamed(context, Routes.dailyLogScreen);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
@@ -228,14 +183,14 @@ class _HomescreenState extends State<Homescreen> {
                             children: [
                               Icon(
                                 Icons.menu_book,
-                                color: Colors.orange[600],
+                                color: Colors.orange.shade600,
                                 size: 18,
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               Text(
                                 "Daily Log",
                                 style: TextStyle(
-                                  color: Colors.orange[600],
+                                  color: Colors.orange.shade600,
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -245,7 +200,7 @@ class _HomescreenState extends State<Homescreen> {
                         ),
                       ),
 
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
 
                       // Weekly Summary Button
                       SizedBox(
@@ -253,12 +208,7 @@ class _HomescreenState extends State<Homescreen> {
                         height: 50,
                         child: ElevatedButton(
                           onPressed: () {
-
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => WeeklySummaryScreen()),
-                            );
-
+                            Navigator.pushNamed(context, Routes.weeklySummaryScreen);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
@@ -271,22 +221,18 @@ class _HomescreenState extends State<Homescreen> {
                             ),
                             elevation: 0,
                           ),
-                          child: Row(
+                          child: const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
                                 Icons.bar_chart,
-                                color: Colors.green[700],
+                                color: AppColors.primaryGreen,
                                 size: 18,
                               ),
                               SizedBox(width: 8),
                               Text(
                                 "Weekly Summary",
-                                style: TextStyle(
-                                  color: Colors.green[700],
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                style: AppStyles.font14SemiBoldGreen,
                               ),
                             ],
                           ),
