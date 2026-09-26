@@ -3,9 +3,12 @@ import 'package:my_food_diary/core/di/service_locator.dart';
 import 'package:my_food_diary/core/routing/app_router.dart';
 import 'package:my_food_diary/food_diary_app.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 void main() {
-  setUp(() {
-    setupServiceLocator();
+  setUp(() async {
+    SharedPreferences.setMockInitialValues({});
+    await setupServiceLocator();
   });
 
   tearDown(() {

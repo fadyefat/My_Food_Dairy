@@ -5,6 +5,6 @@ import 'food_diary_app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  setupServiceLocator();
+  await setupServiceLocator();
   runApp(FoodDiaryApp(appRouter: AppRouter()));
 }

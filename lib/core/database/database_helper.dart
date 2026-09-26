@@ -80,13 +80,21 @@ class DatabaseHelper {
   // Get meals for current week
   Future<List<Map<String, dynamic>>> getWeeklyMeals() async {
     final now = DateTime.now();
-    final weekStart = now.subtract(Duration(days: now.weekday - 1));
-    final weekEnd = weekStart.add(const Duration(days: 6));
+    final weekStart = DateTime(now.year, now.month, now.day).subtract(Duration(days: now.weekday - 1));
+    final List<String> daysInWeek = [];
+    for (int i = 0; i < 7; i++) {
+      final d = weekStart.add(Duration(days: i));
+      daysInWeek.add('${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}');
+    }
 
-    final startDate = '${weekStart.day.toString().padLeft(2, '0')}/${weekStart.month.toString().padLeft(2, '0')}/${weekStart.year}';
-    final endDate = '${weekEnd.day.toString().padLeft(2, '0')}/${weekEnd.month.toString().padLeft(2, '0')}/${weekEnd.year}';
-
-    return await getMealsInDateRange(startDate, endDate);
+    final db = await database;
+    final placeholders = List.filled(daysInWeek.length, '?').join(',');
+    return await db.query(
+      'meals',
+      where: 'date IN ($placeholders)',
+      whereArgs: daysInWeek,
+      orderBy: 'date ASC, time ASC',
+    );
   }
 
   // Update a meal
@@ -156,34 +164,73 @@ class DatabaseHelper {
     final todayMeals = await getTodayMeals();
     final totalMeals = todayMeals.length;
 
-    // Count unique meal types for today
-    final mealTypes = <String>{};
+    // Count meal types for today
+    final mealTypeCounts = <String, int>{
+      'Breakfast': 0,
+      'Lunch': 0,
+      'Dinner': 0,
+      'Snack': 0,
+    };
     for (var meal in todayMeals) {
-      mealTypes.add(meal['meal_type'] as String);
+      final type = meal['meal_type'] as String;
+      mealTypeCounts[type] = (mealTypeCounts[type] ?? 0) + 1;
     }
+
+    final nonZeroTypes = mealTypeCounts.values.where((c) => c > 0).length;
 
     return {
       'totalMeals': totalMeals,
-      'mealTypes': mealTypes.length,
+      'mealTypes': nonZeroTypes,
+      'mealTypeCounts': mealTypeCounts,
+      'meals': todayMeals,
     };
   }
 
   // Get weekly statistics
   Future<Map<String, dynamic>> getWeeklyStatistics() async {
+    final dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    final dailyMealCounts = <String, int>{};
+    for (var name in dayNames) {
+      dailyMealCounts[name] = 0;
+    }
+
     final weeklyMeals = await getWeeklyMeals();
     final totalMeals = weeklyMeals.length;
     final avgMealsPerDay = totalMeals / 7.0;
 
     // Count meal types
-    final mealTypeCounts = <String, int>{};
+    final mealTypeCounts = <String, int>{
+      'Breakfast': 0,
+      'Lunch': 0,
+      'Dinner': 0,
+      'Snack': 0,
+    };
     for (var meal in weeklyMeals) {
       final type = meal['meal_type'] as String;
       mealTypeCounts[type] = (mealTypeCounts[type] ?? 0) + 1;
+
+      // Extract day of week from date 'dd/MM/yyyy'
+      final dateStr = meal['date'] as String;
+      final parts = dateStr.split('/');
+      if (parts.length == 3) {
+        final d = int.tryParse(parts[0]);
+        final m = int.tryParse(parts[1]);
+        final y = int.tryParse(parts[2]);
+        if (d != null && m != null && y != null) {
+          final dt = DateTime(y, m, d);
+          final weekdayIndex = dt.weekday - 1; // 0=Mon, 6=Sun
+          if (weekdayIndex >= 0 && weekdayIndex < 7) {
+            final dayKey = dayNames[weekdayIndex];
+            dailyMealCounts[dayKey] = (dailyMealCounts[dayKey] ?? 0) + 1;
+          }
+        }
+      }
     }
 
     String mostCommonMeal = 'None';
-    if (mealTypeCounts.isNotEmpty) {
-      mostCommonMeal = mealTypeCounts.entries
+    final nonZeroTypes = mealTypeCounts.entries.where((e) => e.value > 0).toList();
+    if (nonZeroTypes.isNotEmpty) {
+      mostCommonMeal = nonZeroTypes
           .reduce((a, b) => a.value > b.value ? a : b)
           .key;
     }
@@ -192,6 +239,9 @@ class DatabaseHelper {
       'totalMeals': totalMeals,
       'avgMealsPerDay': avgMealsPerDay,
       'mostCommonMeal': mostCommonMeal,
+      'mealTypeCounts': mealTypeCounts,
+      'dailyMealCounts': dailyMealCounts,
+      'meals': weeklyMeals,
     };
   }
 

@@ -23,6 +23,14 @@ class AppColors {
   static const Color borderGrey = Color(0xFFE0E0E0);
   static const Color cardShadow = Color(0x0D000000);
 
+  // Dark Theme Palette
+  static const Color darkScaffoldBackground = Color(0xFF121212);
+  static const Color darkCardBackground = Color(0xFF1E1E1E);
+  static const Color darkSurface = Color(0xFF2A2A2A);
+  static const Color darkBorder = Color(0xFF383838);
+  static const Color darkTextPrimary = Color(0xFFEEEEEE);
+  static const Color darkTextSecondary = Color(0xFFB0B0B0);
+
   // Meal Type Colors
   static Color breakfastColor = Colors.orange.shade600;
   static Color lunchColor = Colors.green.shade600;
@@ -43,5 +51,44 @@ class AppColors {
       default:
         return defaultMealColor;
     }
+  }
+
+  static ThemeData get lightTheme {
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.light,
+      scaffoldBackgroundColor: scaffoldBackground,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: primaryGreen,
+        brightness: Brightness.light,
+        primary: primaryGreen,
+        secondary: primaryOrange,
+      ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: lightGreenBackground,
+        foregroundColor: darkText,
+        elevation: 0,
+      ),
+    );
+  }
+
+  static ThemeData get darkTheme {
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.dark,
+      scaffoldBackgroundColor: darkScaffoldBackground,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: primaryGreen,
+        brightness: Brightness.dark,
+        primary: Colors.green.shade400,
+        secondary: primaryOrange,
+        surface: darkCardBackground,
+      ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: darkCardBackground,
+        foregroundColor: darkTextPrimary,
+        elevation: 0,
+      ),
+    );
   }
 }

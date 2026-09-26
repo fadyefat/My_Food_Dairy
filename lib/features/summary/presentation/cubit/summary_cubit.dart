@@ -14,6 +14,8 @@ class SummaryCubit extends Cubit<SummaryState> {
       emit(DailySummaryLoaded(
         totalMeals: statistics['totalMeals'] ?? 0,
         mealTypes: statistics['mealTypes'] ?? 0,
+        mealTypeCounts: Map<String, int>.from(statistics['mealTypeCounts'] ?? {}),
+        meals: List<Map<String, dynamic>>.from(statistics['meals'] ?? []),
       ));
     } catch (e) {
       emit(SummaryError('Error loading today statistics: $e'));
@@ -28,6 +30,9 @@ class SummaryCubit extends Cubit<SummaryState> {
         totalMeals: statistics['totalMeals'] ?? 0,
         avgMealsPerDay: (statistics['avgMealsPerDay'] as num?)?.toDouble() ?? 0.0,
         mostCommonMeal: statistics['mostCommonMeal'] ?? 'None',
+        mealTypeCounts: Map<String, int>.from(statistics['mealTypeCounts'] ?? {}),
+        dailyMealCounts: Map<String, int>.from(statistics['dailyMealCounts'] ?? {}),
+        meals: List<Map<String, dynamic>>.from(statistics['meals'] ?? []),
       ));
     } catch (e) {
       emit(SummaryError('Error loading weekly statistics: $e'));

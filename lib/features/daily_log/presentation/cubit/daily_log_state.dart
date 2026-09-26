@@ -7,10 +7,19 @@ class DailyLogInitial extends DailyLogState {}
 class DailyLogLoading extends DailyLogState {}
 
 class DailyLogLoaded extends DailyLogState {
+  final List<MealModel> allMeals;
   final List<MealModel> meals;
   final DateTime selectedDate;
+  final String searchQuery;
+  final String selectedCategory;
 
-  DailyLogLoaded({required this.meals, required this.selectedDate});
+  DailyLogLoaded({
+    required this.allMeals,
+    required this.meals,
+    required this.selectedDate,
+    this.searchQuery = '',
+    this.selectedCategory = 'All',
+  });
 }
 
 class DailyLogError extends DailyLogState {

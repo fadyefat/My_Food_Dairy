@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/routing/routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
+import '../../../../core/theme/theme_cubit.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -10,13 +12,32 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String formattedDate = DateFormat('EEEE, MMMM d, y').format(DateTime.now());
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.lightGreenBackground,
+        backgroundColor: Colors.transparent,
         elevation: 0,
+        actions: [
+          BlocBuilder<ThemeCubit, ThemeMode>(
+            builder: (context, themeMode) {
+              final isCurrentDark = themeMode == ThemeMode.dark;
+              return IconButton(
+                icon: Icon(
+                  isCurrentDark ? Icons.light_mode : Icons.dark_mode_outlined,
+                  color: isCurrentDark ? Colors.amber : AppColors.primaryGreen,
+                ),
+                tooltip: isCurrentDark ? 'Switch to Light Mode' : 'Switch to Dark Mode',
+                onPressed: () {
+                  context.read<ThemeCubit>().toggleTheme();
+                },
+              );
+            },
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
-      backgroundColor: AppColors.lightGreenBackground,
+      backgroundColor: isDark ? AppColors.darkScaffoldBackground : AppColors.lightGreenBackground,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
