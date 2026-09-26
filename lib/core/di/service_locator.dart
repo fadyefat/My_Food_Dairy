@@ -4,6 +4,7 @@ import '../database/database_helper.dart';
 import '../theme/theme_cubit.dart';
 import '../../features/auth/data/repos/auth_repo.dart';
 import '../../features/auth/presentation/cubit/auth_cubit.dart';
+import '../../features/meals/data/datasources/meal_remote_data_source.dart';
 import '../../features/meals/data/repos/meal_repo.dart';
 import '../../features/meals/presentation/cubit/meal_cubit.dart';
 import '../../features/daily_log/presentation/cubit/daily_log_cubit.dart';
@@ -34,9 +35,18 @@ Future<void> setupServiceLocator({SharedPreferences? preferences}) async {
     getIt.registerLazySingleton<AuthCubit>(() => AuthCubit(getIt<AuthRepo>()));
   }
 
-  // Repositories
+  // Remote Data Sources & Repositories
+  if (!getIt.isRegistered<MealRemoteDataSource>()) {
+    getIt.registerLazySingleton<MealRemoteDataSource>(() => MealRemoteDataSource());
+  }
   if (!getIt.isRegistered<MealRepo>()) {
-    getIt.registerLazySingleton<MealRepo>(() => MealRepo(getIt<DatabaseHelper>()));
+    getIt.registerLazySingleton<MealRepo>(
+      () => MealRepo(
+        getIt<DatabaseHelper>(),
+        remoteDataSource: getIt<MealRemoteDataSource>(),
+        authRepo: getIt<AuthRepo>(),
+      ),
+    );
   }
 
   // Cubits / ViewModels (Factory to create fresh instances when requested)
