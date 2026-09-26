@@ -1,4 +1,6 @@
 class Routes {
+  static const String loginScreen = '/loginScreen';
+  static const String registerScreen = '/registerScreen';
   static const String homeScreen = '/';
   static const String mealScreen = '/mealScreen';
   static const String dailyLogScreen = '/dailyLogScreen';

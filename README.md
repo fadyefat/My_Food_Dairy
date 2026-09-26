@@ -1,4 +1,4 @@
-# 🥗 My Food Diary (يومي الغذائي)
+# 🥗 My Food Diary
 
 **My Food Diary** is an offline-first nutrition and meal tracking mobile application built with Flutter. Designed with **Feature-First Clean Architecture**, **BLoC / Cubit** state management, and **100% automated test coverage** for business logic, it represents a production-grade portfolio project.
 

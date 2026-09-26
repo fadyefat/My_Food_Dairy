@@ -5,6 +5,7 @@ import '../../../../core/routing/routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../../core/theme/theme_cubit.dart';
+import '../../../auth/presentation/cubit/auth_cubit.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -13,6 +14,8 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final String formattedDate = DateFormat('EEEE, MMMM d, y').format(DateTime.now());
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final user = context.watch<AuthCubit>().currentUser;
+    final userName = user != null ? (user.isGuest ? 'Guest' : user.displayName) : null;
 
     return Scaffold(
       appBar: AppBar(
@@ -34,6 +37,32 @@ class HomeScreen extends StatelessWidget {
               );
             },
           ),
+          IconButton(
+            icon: const Icon(Icons.logout, color: Colors.redAccent),
+            tooltip: 'Sign Out',
+            onPressed: () async {
+              final confirm = await showDialog<bool>(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  title: const Text('Sign Out'),
+                  content: const Text('Are you sure you want to sign out?'),
+                  actions: [
+                    TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+                    TextButton(
+                      onPressed: () => Navigator.pop(ctx, true),
+                      child: const Text('Sign Out', style: TextStyle(color: Colors.red)),
+                    ),
+                  ],
+                ),
+              );
+              if (confirm == true && context.mounted) {
+                await context.read<AuthCubit>().signOut();
+                if (context.mounted) {
+                  Navigator.pushNamedAndRemoveUntil(context, Routes.loginScreen, (route) => false);
+                }
+              }
+            },
+          ),
           const SizedBox(width: 8),
         ],
       ),
@@ -44,7 +73,18 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
+              if (userName != null) ...[
+                Text(
+                  'Hello, $userName 👋',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.primaryGreen,
+                  ),
+                ),
+                const SizedBox(height: 4),
+              ],
               // App Title
               Text(
                 "My Food Diary",
@@ -56,7 +96,7 @@ class HomeScreen extends StatelessWidget {
                 formattedDate,
                 style: AppStyles.font14Grey,
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 30),
 
               // Quick Actions Container
               Container(

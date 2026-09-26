@@ -5,6 +5,7 @@ import 'core/routing/app_router.dart';
 import 'core/routing/routes.dart';
 import 'core/theme/app_colors.dart';
 import 'core/theme/theme_cubit.dart';
+import 'features/auth/presentation/cubit/auth_cubit.dart';
 
 class FoodDiaryApp extends StatelessWidget {
   final AppRouter appRouter;
@@ -13,8 +14,13 @@ class FoodDiaryApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<ThemeCubit>.value(
-      value: getIt<ThemeCubit>(),
+    final hasUser = getIt<AuthCubit>().currentUser != null;
+
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ThemeCubit>.value(value: getIt<ThemeCubit>()),
+        BlocProvider<AuthCubit>.value(value: getIt<AuthCubit>()),
+      ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, themeMode) {
           return MaterialApp(
@@ -23,7 +29,7 @@ class FoodDiaryApp extends StatelessWidget {
             theme: AppColors.lightTheme,
             darkTheme: AppColors.darkTheme,
             themeMode: themeMode,
-            initialRoute: Routes.homeScreen,
+            initialRoute: hasUser ? Routes.homeScreen : Routes.loginScreen,
             onGenerateRoute: appRouter.generateRoute,
           );
         },

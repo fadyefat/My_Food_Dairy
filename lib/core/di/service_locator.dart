@@ -2,6 +2,8 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../database/database_helper.dart';
 import '../theme/theme_cubit.dart';
+import '../../features/auth/data/repos/auth_repo.dart';
+import '../../features/auth/presentation/cubit/auth_cubit.dart';
 import '../../features/meals/data/repos/meal_repo.dart';
 import '../../features/meals/presentation/cubit/meal_cubit.dart';
 import '../../features/daily_log/presentation/cubit/daily_log_cubit.dart';
@@ -22,6 +24,14 @@ Future<void> setupServiceLocator({SharedPreferences? preferences}) async {
   }
   if (!getIt.isRegistered<ThemeCubit>()) {
     getIt.registerLazySingleton<ThemeCubit>(() => ThemeCubit(getIt<SharedPreferences>()));
+  }
+
+  // Auth
+  if (!getIt.isRegistered<AuthRepo>()) {
+    getIt.registerLazySingleton<AuthRepo>(() => AuthRepo(getIt<SharedPreferences>()));
+  }
+  if (!getIt.isRegistered<AuthCubit>()) {
+    getIt.registerLazySingleton<AuthCubit>(() => AuthCubit(getIt<AuthRepo>()));
   }
 
   // Repositories
