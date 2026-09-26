@@ -2,7 +2,7 @@
 
 **My Food Diary** is an offline-first nutrition and meal tracking mobile application built with Flutter. Designed with **Feature-First Clean Architecture**, **BLoC / Cubit** state management, and **100% automated test coverage** for business logic, it represents a production-grade portfolio project.
 
-##Trell0
+Trello :
 https://trello.com/invite/b/6aa7a3660acd6f3eb835143a/ATTI4eced801923aca978b1337b15913c813AD1514EF/fittrack-flutter-fitness-app
 ---
 
